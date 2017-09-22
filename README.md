@@ -2,12 +2,16 @@
 
 > 筆記一下一些基本的T-SQL語法, 還有一些常用的東西, 免得又忘記...囧
 
-Transact-SQL（又稱T-SQL）是具有批次與區塊特性的SQL指令集合，<br>
-資料庫開發人員可以利用它來撰寫資料部份的商業邏輯（Data-based Business Logic），<br>
+<br>
+
+Transact-SQL（又稱T-SQL）是具有批次與區塊特性的SQL指令集合，資料庫開發人員可以利用它來撰寫資料部份的商業邏輯（Data-based Business Logic），<br>
 以強制限制前端應用程式對資料的控制能力。<br>
 同時，它也是資料庫物件的主要開發語言。<br>
 
+<br>
+
 ## 基本語法
+
 + SELECT   想要查詢的欄位
 + FROM	    想要查詢的表格
 + WHERE    查詢條件 [AND|OR] 
@@ -15,7 +19,7 @@ Transact-SQL（又稱T-SQL）是具有批次與區塊特性的SQL指令集合，
 + HAVING   分組條件
 + ORDER BY 排序設定
 + LIMIT    限制設定
---------------------------------<br>
+<br>--------------------------------<br>
 + AVG (平均)
 + COUNT (計數, NULL時，該筆記錄不會被計算進去)
 + DISTINCT (找出不同資料)
@@ -27,6 +31,8 @@ Transact-SQL（又稱T-SQL）是具有批次與區塊特性的SQL指令集合，
 + Replace (改變內容)
 + DATEDIFF (算日期間的間隔，傳回帶正負號的整數)
 + ISNULL ( 有資料時傳回 , 前面為NULL 時所傳回 )
+
+<br>
 
 ## 一、 一般查詢
 
@@ -46,7 +52,10 @@ Transact-SQL（又稱T-SQL）是具有批次與區塊特性的SQL指令集合，
 </pre>
 
 [效能優化1](http://www.cc.ntu.edu.tw/chinese/epaper/0031/20141220_3109.html)
+
 [效能優化2](http://blog.xuite.net/j2ee/code/15120677-%E8%AA%BF%E6%A0%A1+SQL+%E4%BB%A5%E5%BE%B9%E5%BA%95%E6%94%B9%E5%96%84%E6%87%89%E7%94%A8%E7%A8%8B%E5%BC%8F%E6%95%88%E8%83%BD)
+
+<br>
 
 ### 查詢語法範例：
 
@@ -99,6 +108,8 @@ Transact-SQL（又稱T-SQL）是具有批次與區塊特性的SQL指令集合，
 
 </pre>
 
+<br>
+
 ### JOINS，語法範例：
 
 <pre>
@@ -120,13 +131,17 @@ Transact-SQL（又稱T-SQL）是具有批次與區塊特性的SQL指令集合，
 
 <img class="header-picture" src="/images/Join.png" alt=""/>
 
+<br>
+<br>
 
 ### COUNT、GROUP BY、別名，語法範例：
+
 
 幫一般欄位取一個欄位別名是比較沒有必要的，如果是運算式的話，通常就要幫它取一個欄位別名來取代原來一大串的運算式。<br>
 取欄位別名的時候要特別注意２種狀況, 一定要使用單引號或雙引號, 否則執行描述以後會發生錯誤...<br>
 1. 如果欄位別名包含空白, 例如 Company Nos
 2. 如果堅持用SQL語法中的保留字來當作欄位別名, 例如 SELECT
+
 
 <pre>
 
@@ -137,6 +152,7 @@ Transact-SQL（又稱T-SQL）是具有批次與區塊特性的SQL指令集合，
 
 </pre>
 
+<br>
 
 ## 二、新增、修改與刪除
 
@@ -178,12 +194,16 @@ Transact-SQL（又稱T-SQL）是具有批次與區塊特性的SQL指令集合，
   WHERE		Unit_Code = N''
 </pre>
 
+<br>
+
 ## 三、變數
+
 
 使用者自訂變數以DECLARE宣告<br>
 變數名稱以@開頭<br>
 以SET或SELECT指定變數值<br>
 請勿使用兩個@@，此為系統變數。列如@@error<br>
+
 
 <pre>
 
@@ -215,6 +235,8 @@ Transact-SQL（又稱T-SQL）是具有批次與區塊特性的SQL指令集合，
 
 </pre>
 
+<br>
+
 ## 四、判斷式
 
 <pre>
@@ -236,6 +258,7 @@ Transact-SQL（又稱T-SQL）是具有批次與區塊特性的SQL指令集合，
       WHERE	Company_Code = @Company_Code
     END
 
+
 --另一種寫法
   SELECT		*
   FROM		dbo.A00B1_Company
@@ -256,6 +279,7 @@ Transact-SQL（又稱T-SQL）是具有批次與區塊特性的SQL指令集合，
 
 </pre>
 
+<br>
 
 ## 五、其他運用
 
@@ -277,6 +301,7 @@ Transact-SQL（又稱T-SQL）是具有批次與區塊特性的SQL指令集合，
   FROM dbo.fn_Split(D.Fare_Match_Route, N';')
   WHERE @Route_Summary = value
 </pre>
+
 
 ### 時間
 
@@ -320,6 +345,7 @@ Transact-SQL（又稱T-SQL）是具有批次與區塊特性的SQL指令集合，
 
 </pre>
 
+
 ### ROLLUP
 
 <pre>
@@ -328,6 +354,7 @@ Transact-SQL（又稱T-SQL）是具有批次與區塊特性的SQL指令集合，
     ROLLUP
 
 </pre>
+
 
 ### WITH (NOLOCK)
 
@@ -340,21 +367,29 @@ NOLOCK：指定允許中途讀取。
 也就是說，若是使用WITH (NOLOCK)，是允許「中途讀取」。<br>
 
 
+
 ## 六、其他
+
 
 ### T-SQL - 取每一群組的第一筆
 
+
 [Demo](https://lwsu.com.tw/Blog/2017/06/15/20170615_SQL/)
+
+<br>
 
 ### SQL & C# 變數對應表
 
+
 <img class="header-picture" src="/images/table.png" alt=""/>
 
+<br>
 
 ### Stored Procedure (預存程序) 優點
 
 <img class="header-picture" src="/images/SP.png" alt=""/>
 
+<br>
 
 
 未完待續...
