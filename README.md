@@ -329,8 +329,9 @@ Transact-SQL（又稱T-SQL）是具有批次與區塊特性的SQL指令集合，
 
 
 -- 傳回代表指定 date 之指定 datepart 的整數
-    SELECT DATEPART(year, '12:10:30.123')
-
+    SELECT DATEPART(year, '12:10:30.123')
+    
+    (DATEPART(hh ,Booking_Time) BETWEEN 12 AND 18)
 </pre>
 
 ### CTE (一般資料表運算式)
