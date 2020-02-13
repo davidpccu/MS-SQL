@@ -121,12 +121,15 @@ Transact-SQL（又稱T-SQL）是具有批次與區塊特性的SQL指令集合，
   JOIN		dbo.A00B1_UnitCode	B ON A.Company_Code = B.Company_Code
 
 
---LEFT JOIN會返回左側資料表中所有資料列，就算沒有符合連接條件，而右側資料表中如果沒有匹配的資料值就會顯示為「NULL」
+-- LEFT JOIN 會返回[資料表1]中所有資料列，就算沒有符合連接條件，而[資料表2]中如果沒有匹配的資料值就會顯示為「NULL」
 
     SELECT		A.Company_Code, A.Company_Name, B.*
     FROM		dbo.A00B1_Company	A
     LEFT JOIN	dbo.A00B1_UnitCode	B ON A.Company_Code = B.Company_Code
     --WHERE		B.Company_Code IS NULL
+    
+-- Right Join 串聯兩個資料表中對應欄資料時，以[資料表2]的資料為主，若資料存在於[資料表2]，但[資料表1]沒有對應值時，仍顯示[資料表2]中的資料。
+ 
 </pre>
 
 <img class="header-picture" src="/images/Join.png" alt=""/>
