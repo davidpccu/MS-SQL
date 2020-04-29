@@ -370,7 +370,12 @@ NOLOCK：指定允許中途讀取。
 
 也就是說，若是使用WITH (NOLOCK)，是允許「中途讀取」。<br>
 
+### ROW_NUMBER()
 
+```sql
+ROW_NUMBER() OVER(PARTITION BY AAA ORDER BY BBB)
+```
+OVER子句內的PARTITION BY可以指定AAA欄位做分割，被分割的會自成一個群組，並以BBB欄位下去排序編號。
 
 ## 六、其他
 
