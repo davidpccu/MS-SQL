@@ -284,7 +284,29 @@ Transact-SQL（又稱T-SQL）是具有批次與區塊特性的SQL指令集合，
 
 <br>
 
-## 五、其他運用
+## 五、交易(Transaction)
+
+1. BEGIN：開啟交易，打開交易功能。
+2. COMMITN：確認交易，在交易結束時確認交易，在確認時資料才會真的寫入資料表。
+3. ROLLBACK：回復交易，執行這行時，會回復在交易內所有T-SQL所更動的內容。
+
+```SQL
+--先開啟交易
+BEGIN TRANSACTION
+
+-- 新增、修改、刪除相關語法執行
+xxx
+
+--沒問題就確認交易完成，資料也會在這時候確認新增和修改
+COMMIT TRANSACTION
+
+--若是有問題就取消交易，讓資料不被這三段T-SQL所影響
+ROLLBACK TRANSACTION
+
+```
+
+
+## 六、其他運用
 
 
 ### 字串
@@ -359,6 +381,14 @@ Transact-SQL（又稱T-SQL）是具有批次與區塊特性的SQL指令集合，
 
 </pre>
 
+### View 檢視表、視圖 (SQL View Table)
+
+資料表是一種實體結構 (physical structure)，而 View 是一種虛擬結構 (virtual structure)。
+
++ 加強資料庫的安全性，View 可以將實體資料表結構隱藏起來，同時限制使用者只可以檢視及使用哪些資料表欄位。
++ 檢視表是唯讀的，亦即外部使用者無法直接透過 View 去修改內部資料。
++ 將複雜的 SQL 查詢包裝在 View 中，可以簡化查詢的複雜度。
++ 當資料表結構有變更時，只需要更改 View 的設定，不需更改程式。
 
 ### WITH (NOLOCK)
 
@@ -377,7 +407,7 @@ ROW_NUMBER() OVER(PARTITION BY AAA ORDER BY BBB)
 ```
 OVER子句內的PARTITION BY可以指定AAA欄位做分割，被分割的會自成一個群組，並以BBB欄位下去排序編號。
 
-## 六、其他
+## 七、其他
 
 ### 資料型態
 
