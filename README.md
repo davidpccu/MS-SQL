@@ -374,12 +374,44 @@ ROLLBACK TRANSACTION
 
 ### ROLLUP
 
-<pre>
++ ROLLUP 運算子可用來產生包含小計與總數的報告
 
-    GROUP BY ROLLUP(A.Fulfill_Date)
-    ROLLUP
+``` SQL
+SELECT 
+    warehouse, product, SUM(quantity)
+FROM
+    inventory
+GROUP BY ROLLUP (warehouse , product);
+```
+![](https://i.imgur.com/12tiuoC.png)
 
-</pre>
+### PIVOT
+
++ PIVOT 將資料行內資料的唯一值旋轉成多個資料行，並對數值型欄位進行彙總（直轉橫）。
++ UNPIVOT則是跟PIVOT相反（橫轉直）。PS：資料行（Column）、資料列 （Row）。
+
+![](https://i.imgur.com/TCPhAck.png)
+
+1. 群組欄位: 可多欄位，會 Group 這些欄位後做為實際輸出的資料量。
+2. 轉置欄位: 轉置後新增欄位出處(就是想顯示匯總的分類條件)
+3. 彙總欄位: 轉置後新增欄位內容(就是想匯總的目標資料)
+4. 設定彙總欄位及方式: 轉置後群組中有可能存在多筆資料，因此需要針對彙總欄位設定彙總方式
+5. 設定轉置後新增欄位: 設定轉置欄位，並指定轉置欄位中需彙總的條件值(置於中括號)作為新欄位。
+
+```SQL
+  -- 依此 群組欄位及轉置欄位條件來查詢彙總出彙總欄位內容值
+  SELECT *
+  FROM (
+    SELECT l.MasterLangId, l.LangType, l.ShowText
+    FROM dbo.Lang l
+  ) t 
+  PIVOT (
+    -- 設定彙總欄位及方式
+    MAX(ShowText) 
+    -- 設定轉置欄位，並指定轉置欄位中需彙總的條件值作為新欄位
+    FOR LangType IN ([zh-TW], [zh-CN], [en-US])
+  ) p;
+```
 
 ### View 檢視表、視圖 (SQL View Table)
 
