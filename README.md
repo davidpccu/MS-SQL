@@ -571,4 +571,13 @@ WHERE ProductID = 897 --2筆
 
 ### 參數探測(parameter sniffing)
 
+    上面提到資料筆數少時用Index Seek，筆數多用Index Scan
+    當我們使用WHERE ProductID = 897（把比對值直接寫在指令裡，術語稱為Literal），SQL分析時已知搜尋對象為ProductID 897，由統計資料預測結果筆數不多，使用Index Seek效率較佳。
+    而宣告變數（Variable），指定變數值再WHERE ProductID = @p的做法，SQL於執行前無從得知＠p的內容（雖然指令中有SET ＠p = 897，但分析期間不會真的下去跑指令），故只能用平均值進行預測，而266個ProductID大部分用Index Scan效率較佳，SQL押Index Scan贏面大，故遇到WHERE ProductID = 變數的場合一律用Index Scan。
+    對SQL而言，Procedure內的邏輯固定，可以預先分析，而參數值在傳入時已知，不像變數到執行期間才確定，故SQL可以依參數值決定最適合的執行計劃（術語為Parameter Sniffing）。
+    
++ 只有Literal式寫法（WHERE Product=870）才能保證SQL針對該次查詢條件進行最佳化。
++ Variable會阻礙SQL分析，只能依統計平均值決定執行計劃。
++ SQL會針對第一次的Parameter值執行分析選定執行計劃，並存入快取沿用，不因後續傳入參數值重新分析調整。
 
+[參考](https://blog.darkthread.net/blog/literal-var-param-and-exec-plan/)
