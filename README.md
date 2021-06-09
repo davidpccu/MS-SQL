@@ -486,30 +486,89 @@ OVER子句內的PARTITION BY可以指定AAA欄位做分割，被分割的會自�
 
 <br>
 
+## 八、資料庫正規化
 
-## 正規化
+### 正規化
 
     其目的是為了降低資料的「重覆性」與避免「更新異常」的情況發生。
 
-### 1NF
+#### 1NF
 
 + 定義主鍵值（primary key）及單一值
 + 避免欄位長度無法確定、出現完全一樣的兩筆資料
 
-### 2NF
+#### 2NF
 
 + 符合1NF
 + 降低資料重複性(消除相依性)
 
-### 3NF
+#### 3NF
 
 + 符合1NF及2NF
 + 消除遞移相依
 
-## 反正規化
+### 反正規化
 
     如果過度正規化，在查詢來自於多個資料表的大量資料時，會造成效能下降。
     因此，若要以查詢(select)效能為考量，必須進行適當的反正規化
     亦即將原來的第三正規化降成第二正規化，或是將第二正規化降成第一正規化。
 
 + 在做系統分析時，必須依據業務需求去做適當的資料庫規畫，若需求上是以查詢(select)效能為優先考量，資料表就不需要做太多正規化。
+
+## 九、執行計畫
+
+### Index Scan vs Index Seek
+
+#### Table Scan
+    當資料表沒有任何Index，資料庫引擎唯一的選擇是讀取整個資料表逐筆比對。
+    查詢過程耗費時間與結果筆數無關，因為整個資料表要掃一遍，這是最沒效率的做法。
+#### Clustered Index Scan
+    當資料表有建立Clustered-Index，評估查詢條件無法藉由其他Index加速，資料庫引擎逐筆讀取整個Clustered Index進行比對，由於全部資料要掃一次，查詢耗費時間不受結果筆數影響。
+    由於Clustered Index順序與資料實際儲存順序一致，不需要額外尋找動作（例如：Key Lookup）就能讀到SELECT要求的欄位。
+#### Index Scan
+    查詢條件包含Index的組成欄位，資料庫引擎逐筆讀取Index（由第一筆到最後一筆），從中找出符合者。若SELECT要求Index未包含的欄位，
+    則還需透過Key Lookup找到資料列讀取資料。不管最後找到幾筆，都得讀完整個Index，尋找過程耗費時間與結果筆數無關（不考慮讀取資料時間）。    
+#### Index Seek
+    當查詢條件包含Index組成的第一個欄位（由此可知，建立多欄位Index時順序很重要），資料庫引擎可透過B Tree演算法較快找到第一筆相符資料，
+    逐筆讀取直到資料不相符為止（如同Index Scan，必要時還需配合Key Lookup），Index Seek時間長短與結果筆數多寡成正比。
+
+#### 結論
++ 一般而言，Index Seek比Index Scan有效率(ex: 結果1筆)
++ 但**『結果筆數』**多時，Index Scan比Index Seek划算 (ex: 結果4688筆)
++ 固相同的SELECT … WHERE Col = 'Blah'查詢，會因為'Blah'值不同，有時用Index Scan，有時用Index Seek，這是SQL Server基於執行效率考量的結果。
+
+``` sql
+SELECT ProductID,  OrderQty FROM Sales.SalesOrderDetail 
+WHERE ProductID = 870 --4688筆
+ 
+SELECT ProductID,  OrderQty FROM Sales.SalesOrderDetail 
+WHERE ProductID = 897 --2筆
+```
+<img class="header-picture" src="/images/plan.gif" alt=""/>
+
+#### Clustered Index 與 Non-Clustered Index 區別、使用時機
+
+|   |Clustered Index|Non-Clustered Index|
+|---|---|---|
+|每一個 Table 能有幾個？|1 個|多個|
+|Table 是否會依照所建立的 Index 方式排序？|會|不會|
+|是否需要額外的 Lookup Operations？|不需要|需要|
+
+|   |使用Clustered Index|使用Non-Clustered Index|
+|---|---|---|
+|欄位經常被分組排序|適合|不適合|
+|回傳某個範圍內的資料|適合|不適合|
+|欄位值一個或極少相異|不適合|不適合|
+|欄位值少量相異|適合|不適合|
+|欄位值大量相異|不適合|適合|
+|欄位值頻繁地被更新|不適合|適合|
+|欄位為外鍵|適合|適合|
+|欄位為主鍵|適合|適合|
+|索引欄位頻繁地被修改|不適合|適合|
+
++ Clustered Index: 每個 Table 只能有一個 Clustered Index，Table 資料就會依據 Clustered Index 的方式排列，這好比書籍的目錄，每本書只能有一個目錄，因為整本書會依照這個目錄排序。
++ Non-Clustered index: 每個 Table 能有許多 Non-Clustered Index，這好比書集後面的索引目錄，每本書可以有很多種索引目錄，例如依照字母排序、依照附錄A、依照附錄B。
+
+### 參數探測(parameter sniffing)
+
+
