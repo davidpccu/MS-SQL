@@ -469,7 +469,7 @@ OVER子句內的PARTITION BY可以指定AAA欄位做分割，被分割的會自�
 ### T-SQL - 取每一群組的第一筆
 
 
-[Demo](https://lwsu.com.tw/Blog/2017/06/15/20170615_SQL/)
+[Demo](https://davidpccu.github.io/Blog/2017/06/15/20170615_SQL/)
 
 <br>
 
